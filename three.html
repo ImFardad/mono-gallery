@@ -46,18 +46,6 @@
             transform: scale(1.03);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
-
-        .artwork-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          grid-auto-rows: 8px;      /* هر “ردیف” خیلی کوتاه باشه تا دقیق‌تر span بدیم */
-          gap: 16px;                 /* مطابق با فاصله‌ای که می‌خوای */
-        }
-        
-        .artwork-card {
-          transition: all .3s;
-        }
-
         
         .font-1 { font-family: 'Playfair Display', serif; }
         .font-2 { font-family: 'Roboto', sans-serif; }
@@ -607,91 +595,54 @@
         </h2>
         
         <div class="artwork-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- 1. Praying Hands, Albrecht Dürer -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Albrecht_D%C3%BCrer_-_Praying_Hands%2C_1508_-_Google_Art_Project.jpg" 
-                alt="Praying Hands by Albrecht Dürer">
-            </div> <!-- :contentReference[oaicite:0]{index=0} -->
-          
-            <!-- 2. Vitruvian Man, Leonardo da Vinci -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/8/80/Vitruvian_Man_by_Leonardo_da_Vinci.jpg" 
-                alt="Vitruvian Man by Leonardo da Vinci">
-            </div> <!-- :contentReference[oaicite:1]{index=1} -->
-          
-            <!-- 3. Self-Portrait with Beret and Turned-Up Collar, Rembrandt -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/4/44/Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg" 
-                alt="Self-Portrait with Beret and Turned-Up Collar by Rembrandt">
-            </div> <!-- :contentReference[oaicite:2]{index=2} -->
-          
-            <!-- 4. Arrangement in White and Black, James McNeill Whistler -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/7/75/James_McNeill_Whistler_-_Arrangement_in_White_and_Black_-_Google_Art_Project.jpg" 
-                alt="Arrangement in White and Black by James McNeill Whistler">
-            </div> <!-- :contentReference[oaicite:3]{index=3} -->
-          
-            <!-- 5. The Steerage, Alfred Stieglitz -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Alfred_Stieglitz_-_The_Steerage_-_Google_Art_Project.jpg" 
-                alt="The Steerage by Alfred Stieglitz">
-            </div> <!-- :contentReference[oaicite:4]{index=4} -->
-          
-            <!-- 6. Sorrow (F929), Vincent van Gogh -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Vincent_van_Gogh_-_Sorrow.jpg" 
-                alt="Sorrow by Vincent van Gogh">
-            </div> <!-- :contentReference[oaicite:5]{index=5} -->
-          
-            <!-- 7. Study of a Tuscan Landscape -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/1/11/Study_of_a_Tuscan_Landscape.jpg" 
-                alt="Study of a Tuscan Landscape">
-            </div> <!-- :contentReference[oaicite:6]{index=6} -->
-          
-            <!-- 8. Road to Bethany, Henry Ossawa Tanner -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Road_To_Bethany_%28black_and_white_photo%29%2C_by_Henry_Ossawa_Tanner.jpg" 
-                alt="Road to Bethany by Henry Ossawa Tanner">
-            </div> <!-- :contentReference[oaicite:7]{index=7} -->
-          
-            <!-- 9. Melencolia I, Albrecht Dürer -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/d/d3/D%C3%BCrer_Melancholia_I.jpg" 
-                alt="Melencolia I by Albrecht Dürer">
-            </div> <!-- :contentReference[oaicite:8]{index=8} -->
-          
-            <!-- 10. Knight, Death and the Devil, Albrecht Dürer -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/2/2f/D%C3%BCrer_Knight%2C_Death_and_the_Devil.jpg" 
-                alt="Knight, Death and the Devil by Albrecht Dürer">
-            </div> <!-- Public domain (Wikimedia Commons) -->
-          
-            <!-- 11. Saint Jerome in His Study, Albrecht Dürer -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/c/ca/D%C3%BCrer_Saint_Jerome_in_His_Study.jpg" 
-                alt="Saint Jerome in His Study by Albrecht Dürer">
-            </div> <!-- Public domain (Wikimedia Commons) -->
-          
-            <!-- 12. Madonna of the Carnation (sketch), Leonardo da Vinci -->
-            <div class="artwork-card bg-gray-100 shadow rounded-lg overflow-hidden">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Leonardo_da_Vinci_-_Madonna_of_the_Carnation_sketch.jpg" 
-                alt="Madonna of the Carnation sketch by Leonardo da Vinci">
-            </div> <!-- Public domain (Wikimedia Commons) -->
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?abstract,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:aspect-[2/3] transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x600/?drawing,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?sketch,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:aspect-[3/4] transition-all duration-300">
+                <img src="https://source.unsplash.com/random/600x800/?painting,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:col-span-2 transition-all duration-300">
+                <img src="https://source.unsplash.com/random/800x400/?art,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?illustration,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?design,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:aspect-[4/3] transition-all duration-300">
+                <img src="https://source.unsplash.com/random/800x600/?print,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?graphic,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:aspect-[3/2] transition-all duration-300">
+                <img src="https://source.unsplash.com/random/600x400/?artwork,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+                <img src="https://source.unsplash.com/random/400x400/?modern,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="artwork-card bg-white aspect-square md:col-span-2 transition-all duration-300">
+                <img src="https://source.unsplash.com/random/800x400/?contemporary,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
+            </div>
         </div>
-          
     </section>
     
     <!-- Artist Section -->
@@ -978,22 +929,6 @@
                 this.style.transform = 'scale(1)';
                 this.style.boxShadow = 'none';
             });
-        });
-    </script>
-    <script>
-        window.addEventListener('load', () => {
-          const grid      = document.querySelector('.artwork-grid');
-          const rowHeight = parseInt(getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
-          const rowGap    = parseInt(getComputedStyle(grid).getPropertyValue('gap'));
-        
-          grid.querySelectorAll('.artwork-card').forEach(card => {
-            const img = card.querySelector('img');
-            img.addEventListener('load', () => {
-              const span = Math.ceil((img.getBoundingClientRect().height + rowGap) 
-                                     / (rowHeight + rowGap));
-              card.style.gridRowEnd = `span ${span}`;
-            });
-          });
         });
     </script>
 </body>
