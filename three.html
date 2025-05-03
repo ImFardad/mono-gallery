@@ -46,6 +46,18 @@
             transform: scale(1.03);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
+
+        .artwork-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-auto-rows: 8px;      /* هر “ردیف” خیلی کوتاه باشه تا دقیق‌تر span بدیم */
+          gap: 16px;                 /* مطابق با فاصله‌ای که می‌خوای */
+        }
+        
+        .artwork-card {
+          transition: all .3s;
+        }
+
         
         .font-1 { font-family: 'Playfair Display', serif; }
         .font-2 { font-family: 'Roboto', sans-serif; }
@@ -594,52 +606,52 @@
             <span class="font-7">Y</span>
         </h2>
         
-        <div class="artwork-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+        <div class="artwork-grid">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?abstract,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:aspect-[2/3] transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x600/?drawing,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?sketch,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:aspect-[3/4] transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/600x800/?painting,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:col-span-2 transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/800x400/?art,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?illustration,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?design,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:aspect-[4/3] transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/800x600/?print,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?graphic,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:aspect-[3/2] transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/600x400/?artwork,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/400x400/?modern,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
             
-            <div class="artwork-card bg-white aspect-square md:col-span-2 transition-all duration-300">
+            <div class="artwork-card bg-white transition-all duration-300">
                 <img src="https://source.unsplash.com/random/800x400/?contemporary,blackandwhite" alt="Artwork" class="w-full h-full object-cover">
             </div>
         </div>
@@ -929,6 +941,22 @@
                 this.style.transform = 'scale(1)';
                 this.style.boxShadow = 'none';
             });
+        });
+    </script>
+    <script>
+        window.addEventListener('load', () => {
+          const grid      = document.querySelector('.artwork-grid');
+          const rowHeight = parseInt(getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+          const rowGap    = parseInt(getComputedStyle(grid).getPropertyValue('gap'));
+        
+          grid.querySelectorAll('.artwork-card').forEach(card => {
+            const img = card.querySelector('img');
+            img.addEventListener('load', () => {
+              const span = Math.ceil((img.getBoundingClientRect().height + rowGap) 
+                                     / (rowHeight + rowGap));
+              card.style.gridRowEnd = `span ${span}`;
+            });
+          });
         });
     </script>
 </body>
