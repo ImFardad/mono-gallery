@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOCHROME | Black & White Art Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Multiple diverse fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap" rel="swap">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for thread background and animations */
+        body {
+            background-color: black;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .thread-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .thread {
+            position: absolute;
+            width: 1px;
+            background: white;
+            top: 0;
+            bottom: 0;
+            transform-origin: top center;
+        }
+        
+        @keyframes swing {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        .gallery-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+        
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+        
+        .gallery-item .art-info {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0,0,0,0.8);
+            transition: bottom 0.3s ease;
+            z-index: 2;
+        }
+        
+        .gallery-item:hover .art-info {
+            bottom: 0;
+        }
+        
+        .carousel-item {
+            transition: transform 0.5s ease;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: black;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: white;
+            border-radius: 4px;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Social media hover effects */
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: rotate(10deg) scale(1.2);
+            filter: drop-shadow(0 0 5px white);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Thread background -->
+    <div class="thread-bg" id="threadBg"></div>
+    
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-90 backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold" style="font-family: 'UnifrakturMaguntia', cursive;">MONOCHROME</div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#gallery" class="hover:text-gray-300 transition" style="font-family: 'VT323', monospace;">GALLERY</a>
+                <a href="#about" class="hover:text-gray-300 transition" style="font-family: 'Press Start 2P', cursive;">ABOUT</a>
+                <a href="#artists" class="hover:text-gray-300 transition" style="font-family: 'Syne Mono', monospace;">ARTISTS</a>
+                <a href="#contact" class="hover:text-gray-300 transition" style="font-family: 'Libre Barcode 128 Text', cursive;">CONTACT</a>
+            </nav>
+            <button id="menuBtn" class="md:hidden">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-64 h-full bg-black z-50 p-4 border-l border-white">
+        <div class="flex justify-end">
+            <button id="closeMenuBtn">
+                <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+        </div>
+        <nav class="mt-8 flex flex-col space-y-6">
+            <a href="#gallery" class="text-xl hover:text-gray-300 transition" style="font-family: 'VT323', monospace;">GALLERY</a>
+            <a href="#about" class="text-xl hover:text-gray-300 transition" style="font-family: 'Press Start 2P', cursive;">ABOUT</a>
+            <a href="#artists" class="text-xl hover:text-gray-300 transition" style="font-family: 'Syne Mono', monospace;">ARTISTS</a>
+            <a href="#contact" class="text-xl hover:text-gray-300 transition" style="font-family: 'Libre Barcode 128 Text', cursive;">CONTACT</a>
+        </nav>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-6xl md:text-9xl font-bold mb-8" style="font-family: 'Archivo Black', sans-serif;">MONOCHROME</h1>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-12" style="font-family: 'Playfair Display', serif;">
+                A sanctuary for black and white artistry, where contrast speaks louder than color.
+            </p>
+            <a href="#gallery" class="inline-block border-2 border-white px-8 py-3 hover:bg-white hover:text-black transition duration-300" style="font-family: 'Major Mono Display', monospace;">
+                EXPLORE GALLERY
+            </a>
+        </div>
+    </section>
+    
+    <!-- Featured Carousel -->
+    <section class="py-20 bg-black bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-5xl font-bold mb-12 text-center" style="font-family: 'Rubik Mono One', sans-serif;">FEATURED WORKS</h2>
+            
+            <div class="relative overflow-hidden h-96 md:h-[32rem]">
+                <div id="carousel" class="flex h-full transition-transform duration-500">
+                    <!-- Carousel items will be added by JavaScript -->
+                </div>
+                <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition">
+                    <span class="material-symbols-outlined text-3xl">chevron_left</span>
+                </button>
+                <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition">
+                    <span class="material-symbols-outlined text-3xl">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-black bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-bold mb-12" style="font-family: 'IM Fell English SC', serif;">ABOUT THE GALLERY</h2>
+                
+                <div class="space-y-8">
+                    <p class="text-lg" style="font-family: 'Playfair Display', serif;">
+                        Founded in 2023, MONOCHROME is dedicated to showcasing the power and beauty of black and white art. 
+                        We believe that by removing color, artists can explore deeper contrasts, textures, and emotions.
+                    </p>
+                    
+                    <p class="text-lg" style="font-family: 'Syne Mono', monospace;">
+                        Our collection spans various mediums including photography, illustration, printmaking, and digital art. 
+                        Each piece is carefully curated to represent the diverse approaches to monochromatic expression.
+                    </p>
+                    
+                    <p class="text-lg" style="font-family: 'Press Start 2P', cursive;">
+                        THE GALLERY HOSTS MONTHLY EXHIBITIONS FEATURING BOTH ESTABLISHED AND EMERGING ARTISTS WORKING IN BLACK AND WHITE MEDIUMS.
+                    </p>
+                    
+                    <p class="text-lg" style="font-family: 'VT323', monospace;">
+                        visit us physically at our location in downtown or explore our virtual exhibitions anytime. we're open 24/7 in the digital space.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Full Gallery -->
+    <section id="gallery" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-5xl font-bold mb-12 text-center" style="font-family: 'Major Mono Display', monospace;">FULL COLLECTION</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery items will be added by JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Artists Section -->
+    <section id="artists" class="py-20 bg-black bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-5xl font-bold mb-12 text-center" style="font-family: 'UnifrakturMaguntia', cursive;">FEATURED ARTISTS</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="artist-card p-6 border border-white hover:bg-white hover:text-black transition group">
+                    <div class="w-full h-64 bg-gray-800 mb-4 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-br from-white to-black group-hover:from-black group-hover:to-white transition"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2" style="font-family: 'Archivo Black', sans-serif;">ELENA VOSS</h3>
+                    <p class="mb-4" style="font-family: 'Playfair Display', serif;">Experimental photographer exploring light and shadow</p>
+                    <a href="#" class="inline-block border border-black group-hover:border-white px-4 py-2" style="font-family: 'Syne Mono', monospace;">VIEW WORKS</a>
+                </div>
+                
+                <div class="artist-card p-6 border border-white hover:bg-white hover:text-black transition group">
+                    <div class="w-full h-64 bg-gray-800 mb-4 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-br from-white to-black group-hover:from-black group-hover:to-white transition"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2" style="font-family: 'Rubik Mono One', sans-serif;">MARCUS KLINE</h3>
+                    <p class="mb-4" style="font-family: 'VT323', monospace;">digital artist creating algorithmic black & white patterns</p>
+                    <a href="#" class="inline-block border border-black group-hover:border-white px-4 py-2" style="font-family: 'Press Start 2P', cursive;">VIEW WORKS</a>
+                </div>
+                
+                <div class="artist-card p-6 border border-white hover:bg-white hover:text-black transition group">
+                    <div class="w-full h-64 bg-gray-800 mb-4 overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-br from-white to-black group-hover:from-black group-hover:to-white transition"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2" style="font-family: 'IM Fell English SC', serif;">ISABELLE CHEN</h3>
+                    <p class="mb-4" style="font-family: 'Libre Barcode 128 Text', cursive;">mixed media artist specializing in ink and charcoal</p>
+                    <a href="#" class="inline-block border border-black group-hover:border-white px-4 py-2" style="font-family: 'Major Mono Display', monospace;">VIEW WORKS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact & Social Media -->
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-bold mb-12 text-center" style="font-family: 'Press Start 2P', cursive;">CONNECT WITH US</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6" style="font-family: 'Archivo Black', sans-serif;">VISIT THE GALLERY</h3>
+                        <address class="not-italic space-y-4" style="font-family: 'Playfair Display', serif;">
+                            <p>123 Monochrome Avenue<br>Downtown Arts District<br>City, ST 12345</p>
+                            <p>Open Tuesday-Sunday<br>11AM - 7PM</p>
+                            <p>Email: info@monochromegallery.com<br>Phone: (123) 456-7890</p>
+                        </address>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6" style="font-family: 'Syne Mono', monospace;">FOLLOW US</h3>
+                        <div class="flex space-x-6">
+                            <a href="#" class="social-icon" aria-label="Instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Twitter">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Pinterest">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1 0-3 4 4 0 0 1 5-5 10 10 0 0 0-10-10z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mt-8 mb-4" style="font-family: 'VT323', monospace;">subscribe to our newsletter</h3>
+                        <form class="space-y-4">
+                            <input type="email" placeholder="Your email" class="w-full bg-transparent border-b border-white py-2 px-1 focus:outline-none focus:border-gray-300" style="font-family: 'Libre Barcode 128 Text', cursive;">
+                            <button type="submit" class="border border-white px-6 py-2 hover:bg-white hover:text-black transition" style="font-family: 'Major Mono Display', monospace;">SUBSCRIBE</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-800">
+        <div class="container mx-auto px-4 text-center">
+            <p style="font-family: 'Press Start 2P', cursive;">© 2023 MONOCHROME GALLERY. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Create thread background
+        function createThreads() {
+            const threadBg = document.getElementById('threadBg');
+            const threadCount = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < threadCount; i++) {
+                const thread = document.createElement('div');
+                thread.className = 'thread';
+                
+                // Random properties for each thread
+                const left = Math.random() * 100;
+                const height = 50 + Math.random() * 50;
+                const animationDuration = 3 + Math.random() * 7;
+                const animationDelay = Math.random() * 5;
+                
+                thread.style.left = `${left}%`;
+                thread.style.height = `${height}vh`;
+                thread.style.animation = `swing ${animationDuration}s ease-in-out ${animationDelay}s infinite alternate`;
+                
+                threadBg.appendChild(thread);
+            }
+        }
+        
+        // Animate threads on scroll
+        function animateThreadsOnScroll() {
+            const threads = document.querySelectorAll('.thread');
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                
+                threads.forEach((thread, index) => {
+                    // Each thread moves slightly differently based on scroll position
+                    const rotation = (scrollPosition / 100 + index) % 360;
+                    thread.style.transform = `rotate(${Math.sin(scrollPosition / 200 + index) * 5}deg)`;
+                });
+            });
+        }
+        
+        // Carousel functionality
+        function setupCarousel() {
+            const carousel = document.getElementById('carousel');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            const featuredArtworks = [
+                {
+                    title: "SHADOW PLAY",
+                    artist: "ELENA VOSS",
+                    description: "A study of light and shadow in urban architecture",
+                    size: "24x36\"",
+                    year: "2023"
+                },
+                {
+                    title: "MONOLITH",
+                    artist: "MARCUS KLINE",
+                    description: "Digital algorithmic pattern exploration",
+                    size: "40x40\"",
+                    year: "2022"
+                },
+                {
+                    title: "WHISPERS",
+                    artist: "ISABELLE CHEN",
+                    description: "Charcoal on handmade paper",
+                    size: "18x24\"",
+                    year: "2023"
+                },
+                {
+                    title: "VOID SERIES #4",
+                    artist: "JAMES LEROY",
+                    description: "Experimental photography with long exposures",
+                    size: "30x45\"",
+                    year: "2021"
+                },
+                {
+                    title: "GRIDLOCK",
+                    artist: "SOPHIA MARTIN",
+                    description: "Ink and graphite on canvas",
+                    size: "36x48\"",
+                    year: "2022"
+                }
+            ];
+            
+            // Create carousel items
+            featuredArtworks.forEach((artwork, index) => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item w-full h-full flex-shrink-0 relative';
+                
+                // Random gradient for artwork placeholder
+                const gradientDirection = Math.floor(Math.random() * 360);
+                const gradientType = Math.random() > 0.5 ? 'linear' : 'radial';
+                
+                let background;
+                if (gradientType === 'linear') {
+                    background = `linear-gradient(${gradientDirection}deg, rgba(255,255,255,0.1), rgba(0,0,0,0.9))`;
+                } else {
+                    background = `radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.9))`;
+                }
+                
+                item.style.background = background;
+                
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'absolute bottom-0 left-0 w-full p-8 bg-black bg-opacity-70';
+                infoDiv.innerHTML = `
+                    <h3 class="text-2xl md:text-4xl font-bold mb-2" style="font-family: '${index % 2 === 0 ? 'Archivo Black' : 'Rubik Mono One'}';">${artwork.title}</h3>
+                    <p class="text-lg" style="font-family: '${index % 2 === 0 ? 'Playfair Display' : 'VT323'}';">${artwork.artist}</p>
+                    <p class="mt-4" style="font-family: '${index % 3 === 0 ? 'Syne Mono' : 'Press Start 2P'}';">${artwork.description}</p>
+                    <p class="mt-2" style="font-family: 'Libre Barcode 128 Text';">${artwork.size} | ${artwork.year}</p>
+                `;
+                
+                item.appendChild(infoDiv);
+                carousel.appendChild(item);
+            });
+            
+            let currentIndex = 0;
+            const items = document.querySelectorAll('.carousel-item');
+            const totalItems = items.length;
+            
+            function updateCarousel() {
+                const offset = -currentIndex * 100;
+                carousel.style.transform = `translateX(${offset}%)`;
+            }
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarousel();
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                updateCarousel();
+            });
+            
+            // Auto-advance carousel
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % totalItems;
+                updateCarousel();
+            }, 5000);
+        }
+        
+        // Gallery grid setup
+        function setupGallery() {
+            const galleryGrid = document.querySelector('#gallery .grid');
+            
+            const artworks = [
+                { size: 'small', title: 'Fragment #12', artist: 'A. Richter' },
+                { size: 'medium', title: 'Urban Echo', artist: 'L. Moreno' },
+                { size: 'large', title: 'The Observer', artist: 'T. Chen' },
+                { size: 'small', title: 'Lines', artist: 'M. Suzuki' },
+                { size: 'medium', title: 'Stillness', artist: 'J. Park' },
+                { size: 'small', title: 'Contrast Study', artist: 'E. Voss' },
+                { size: 'large', title: 'Monolith II', artist: 'M. Kline' },
+                { size: 'medium', title: 'Shadows', artist: 'I. Chen' },
+                { size: 'small', title: 'Grid #5', artist: 'S. Martin' },
+                { size: 'large', title: 'The Void', artist: 'J. Leroy' },
+                { size: 'medium', title: 'Convergence', artist: 'A. Richter' },
+                { size: 'small', title: 'Fragment #13', artist: 'A. Richter' }
+            ];
+            
+            artworks.forEach((artwork, index) => {
+                const item = document.createElement('div');
+                let heightClass = 'h-64';
+                
+                if (artwork.size === 'medium') {
+                    heightClass = 'h-80';
+                } else if (artwork.size === 'large') {
+                    heightClass = 'h-96';
+                }
+                
+                item.className = `gallery-item ${heightClass} bg-gray-800 relative`;
+                
+                // Create random pattern for artwork placeholder
+                const patternType = Math.floor(Math.random() * 4);
+                let pattern;
+                
+                switch(patternType) {
+                    case 0:
+                        pattern = 'repeating-linear-gradient(45deg, transparent, transparent 5px, white 5px, white 10px)';
+                        break;
+                    case 1:
+                        pattern = 'radial-gradient(circle, transparent 20%, white 20%, white 80%, transparent 80%, transparent)';
+                        break;
+                    case 2:
+                        pattern = 'repeating-linear-gradient(0deg, white, white 1px, transparent 1px, transparent 5px)';
+                        break;
+                    case 3:
+                        pattern = 'linear-gradient(135deg, transparent 0%, white 100%)';
+                        break;
+                }
+                
+                item.style.background = pattern;
+                
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'art-info';
+                infoDiv.innerHTML = `
+                    <h3 class="text-xl font-bold" style="font-family: '${index % 2 === 0 ? 'Archivo Black' : 'Rubik Mono One'}';">${artwork.title}</h3>
+                    <p style="font-family: '${index % 3 === 0 ? 'Playfair Display' : 'VT323'}';">${artwork.artist}</p>
+                    <a href="#" class="inline-block mt-2 border border-white px-3 py-1 text-sm hover:bg-white hover:text-black transition" style="font-family: '${index % 4 === 0 ? 'Syne Mono' : 'Press Start 2P'}';">VIEW DETAILS</a>
+                `;
+                
+                item.appendChild(infoDiv);
+                galleryGrid.appendChild(item);
+            });
+        }
+        
+        // Mobile menu toggle
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('open');
+            });
+            
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+            });
+            
+            // Close menu when clicking on a link
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                });
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            createThreads();
+            animateThreadsOnScroll();
+            setupCarousel();
+            setupGallery();
+            setupMobileMenu();
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
