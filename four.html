@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOCHROME | Art Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display|Roboto|Montserrat|Raleway|Oswald|Lora|Merriweather|PT+Serif|Open+Sans|Dancing+Script|Pacifico|Abril+Fatface|Cinzel|Poiret+One|Quicksand|Josefin+Sans|Archivo+Narrow|Cormorant+Garamond|Cardo|Alegreya|Libre+Baskerville|Vollkorn|Baskervville|Old+Standard+TT|Arapey|EB+Garamond">
+    <style>
+        @keyframes movePattern {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        body {
+            background-color: black;
+            color: white;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
+                linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03));
+            background-size: 50px 50px;
+            animation: movePattern 20s linear infinite;
+        }
+        
+        .yarn-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .yarn-path {
+            stroke: white;
+            stroke-width: 1;
+            fill: none;
+            transition: all 0.5s ease;
+        }
+        
+        .artwork-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 1px white;
+        }
+        
+        .artwork-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .font-unique-1 { font-family: 'Playfair Display', serif; }
+        .font-unique-2 { font-family: 'Roboto', sans-serif; }
+        .font-unique-3 { font-family: 'Montserrat', sans-serif; }
+        .font-unique-4 { font-family: 'Raleway', sans-serif; }
+        .font-unique-5 { font-family: 'Oswald', sans-serif; }
+        .font-unique-6 { font-family: 'Lora', serif; }
+        .font-unique-7 { font-family: 'Merriweather', serif; }
+        .font-unique-8 { font-family: 'PT Serif', serif; }
+        .font-unique-9 { font-family: 'Open Sans', sans-serif; }
+        .font-unique-10 { font-family: 'Dancing Script', cursive; }
+        .font-unique-11 { font-family: 'Pacifico', cursive; }
+        .font-unique-12 { font-family: 'Abril Fatface', cursive; }
+        .font-unique-13 { font-family: 'Cinzel', serif; }
+        .font-unique-14 { font-family: 'Poiret One', cursive; }
+        .font-unique-15 { font-family: 'Quicksand', sans-serif; }
+        .font-unique-16 { font-family: 'Josefin Sans', sans-serif; }
+        .font-unique-17 { font-family: 'Archivo Narrow', sans-serif; }
+        .font-unique-18 { font-family: 'Cormorant Garamond', serif; }
+        .font-unique-19 { font-family: 'Cardo', serif; }
+        .font-unique-20 { font-family: 'Alegreya', serif; }
+        
+        .title-word {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .artwork-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Yarn Background -->
+    <svg class="yarn-bg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <path class="yarn-path" d="M0,100 C150,200 350,0 500,100 C650,200 750,0 1000,100" />
+        <path class="yarn-path" d="M0,300 C150,400 350,200 500,300 C650,400 750,200 1000,300" />
+        <path class="yarn-path" d="M0,500 C150,600 350,400 500,500 C650,600 750,400 1000,500" />
+        <path class="yarn-path" d="M0,700 C150,800 350,600 500,700 C650,800 750,600 1000,700" />
+        <path class="yarn-path" d="M0,900 C150,1000 350,800 500,900 C650,1000 750,800 1000,900" />
+    </svg>
+
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-button" class="md:hidden fixed top-4 right-4 z-50">
+        <span class="material-symbols-outlined text-white text-4xl">menu</span>
+    </button>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-black z-40 p-8 flex flex-col items-center justify-center">
+        <button id="close-menu" class="absolute top-4 right-4">
+            <span class="material-symbols-outlined text-white text-4xl">close</span>
+        </button>
+        <nav class="flex flex-col items-center space-y-8">
+            <a href="#home" class="text-white text-2xl font-unique-3 hover:underline">Home</a>
+            <a href="#showcase" class="text-white text-2xl font-unique-5 hover:underline">Showcase</a>
+            <a href="#gallery" class="text-white text-2xl font-unique-7 hover:underline">Gallery</a>
+            <a href="#artist" class="text-white text-2xl font-unique-9 hover:underline">Artist</a>
+            <a href="#contact" class="text-white text-2xl font-unique-11 hover:underline">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header id="home" class="min-h-screen flex flex-col justify-center items-center px-4 py-20 relative">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl mb-8">
+                <span class="title-word font-unique-1">MONO</span>
+                <span class="title-word font-unique-2">CHROME</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-12 font-unique-3">
+                <span class="font-unique-4">A</span> 
+                <span class="font-unique-5">black</span> 
+                <span class="font-unique-6">and</span> 
+                <span class="font-unique-7">white</span> 
+                <span class="font-unique-8">art</span> 
+                <span class="font-unique-9">gallery</span> 
+                <span class="font-unique-10">exploring</span> 
+                <span class="font-unique-11">contrast,</span> 
+                <span class="font-unique-12">form,</span> 
+                <span class="font-unique-13">and</span> 
+                <span class="font-unique-14">minimalism</span>
+            </p>
+            <a href="#showcase" class="inline-block border border-white px-8 py-3 hover:bg-white hover:text-black transition-all duration-300 font-unique-15">
+                Explore Works
+            </a>
+        </div>
+        <div class="absolute bottom-8 left-0 right-0 text-center">
+            <span class="material-symbols-outlined text-white text-4xl animate-bounce">expand_more</span>
+        </div>
+    </header>
+
+    <!-- Showcase Section -->
+    <section id="showcase" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl mb-12 text-center font-unique-16">
+                <span class="font-unique-17">Featured</span> 
+                <span class="font-unique-18">Works</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <!-- Featured Artwork 1 -->
+                <div class="artwork-card floating p-4 bg-black relative overflow-hidden group">
+                    <div class="absolute inset-0 border-2 border-white transform group-hover:scale-105 transition-transform duration-500"></div>
+                    <img src="https://source.unsplash.com/random/600x600/?abstract,blackandwhite" alt="Abstract Composition" class="w-full h-64 md:h-80 object-cover">
+                    <div class="mt-4">
+                        <h3 class="text-xl font-unique-19">Abstract Composition</h3>
+                        <p class="text-gray-300 font-unique-20">2023 | Ink on paper</p>
+                    </div>
+                </div>
+                
+                <!-- Featured Artwork 2 -->
+                <div class="artwork-card floating p-4 bg-black relative overflow-hidden group" style="animation-delay: 1s;">
+                    <div class="absolute inset-0 border-2 border-white transform group-hover:scale-105 transition-transform duration-500"></div>
+                    <img src="https://source.unsplash.com/random/600x600/?portrait,blackandwhite" alt="Portrait Study" class="w-full h-64 md:h-80 object-cover">
+                    <div class="mt-4">
+                        <h3 class="text-xl font-unique-1">Portrait Study</h3>
+                        <p class="text-gray-300 font-unique-2">2022 | Charcoal</p>
+                    </div>
+                </div>
+                
+                <!-- Featured Artwork 3 -->
+                <div class="artwork-card floating p-4 bg-black relative overflow-hidden group" style="animation-delay: 2s;">
+                    <div class="absolute inset-0 border-2 border-white transform group-hover:scale-105 transition-transform duration-500"></div>
+                    <img src="https://source.unsplash.com/random/600x600/?architecture,blackandwhite" alt="Urban Geometry" class="w-full h-64 md:h-80 object-cover">
+                    <div class="mt-4">
+                        <h3 class="text-xl font-unique-3">Urban Geometry</h3>
+                        <p class="text-gray-300 font-unique-4">2021 | Mixed media</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#gallery" class="inline-block border border-white px-8 py-3 hover:bg-white hover:text-black transition-all duration-300 font-unique-5">
+                    View Full Gallery
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-20 px-4 bg-white text-black">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl mb-12 text-center font-unique-6">
+                <span class="font-unique-7">The</span> 
+                <span class="font-unique-8">Power</span> 
+                <span class="font-unique-9">of</span> 
+                <span class="font-unique-10">Monochrome</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <p class="mb-6 font-unique-11">
+                        In a world saturated with color, black and white art stands as a bold statement of simplicity and contrast.
+                    </p>
+                    <p class="mb-6 font-unique-12">
+                        Our gallery celebrates the purity of form, the drama of light and shadow, and the emotional depth that can be achieved without color.
+                    </p>
+                </div>
+                <div>
+                    <p class="mb-6 font-unique-13">
+                        Each piece in our collection challenges the viewer to see beyond the surface, to appreciate composition, texture, and tone.
+                    </p>
+                    <p class="font-unique-14">
+                        From stark minimalism to intricate detail, monochrome art reveals the essence of visual expression.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl mb-12 text-center font-unique-15">
+                <span class="font-unique-16">Full</span> 
+                <span class="font-unique-17">Gallery</span>
+            </h2>
+            
+            <div class="artwork-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Small artworks -->
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract1,blackandwhite" alt="Artwork 1" class="w-full h-full object-cover">
+                </div>
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract2,blackandwhite" alt="Artwork 2" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Medium artwork (taller) -->
+                <div class="artwork-card row-span-2">
+                    <img src="https://source.unsplash.com/random/300x600/?portrait1,blackandwhite" alt="Artwork 3" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Small artworks -->
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract3,blackandwhite" alt="Artwork 4" class="w-full h-full object-cover">
+                </div>
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract4,blackandwhite" alt="Artwork 5" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Medium artwork (wider) -->
+                <div class="artwork-card col-span-2">
+                    <img src="https://source.unsplash.com/random/600x300/?landscape1,blackandwhite" alt="Artwork 6" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Large artwork -->
+                <div class="artwork-card col-span-2 row-span-2">
+                    <img src="https://source.unsplash.com/random/600x600/?abstract5,blackandwhite" alt="Artwork 7" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Small artworks -->
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract6,blackandwhite" alt="Artwork 8" class="w-full h-full object-cover">
+                </div>
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract7,blackandwhite" alt="Artwork 9" class="w-full h-full object-cover">
+                </div>
+                <div class="artwork-card aspect-square">
+                    <img src="https://source.unsplash.com/random/300x300/?abstract8,blackandwhite" alt="Artwork 10" class="w-full h-full object-cover">
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="inline-block border border-white px-8 py-3 hover:bg-white hover:text-black transition-all duration-300 font-unique-18">
+                    Load More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artist Section -->
+    <section id="artist" class="py-20 px-4 bg-white text-black">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl mb-12 text-center font-unique-19">
+                <span class="font-unique-20">About</span> 
+                <span class="font-unique-1">the</span> 
+                <span class="font-unique-2">Artist</span>
+            </h2>
+            
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/3">
+                    <div class="artwork-card overflow-hidden">
+                        <img src="https://source.unsplash.com/random/400x600/?artist,blackandwhite" alt="The Artist" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <h3 class="text-2xl mb-4 font-unique-3">Alexandra Monochrome</h3>
+                    <p class="mb-4 font-unique-4">
+                        A visionary artist specializing in black and white media, Alexandra has been pushing the boundaries of monochrome expression for over a decade.
+                    </p>
+                    <p class="mb-4 font-unique-5">
+                        Her work has been exhibited in galleries worldwide, earning critical acclaim for its emotional depth and technical mastery.
+                    </p>
+                    <p class="font-unique-6">
+                        "In the absence of color, we find truth. Black and white reveals what color often obscures - the raw essence of form and feeling."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl mb-12 text-center font-unique-7">
+                <span class="font-unique-8">Connect</span> 
+                <span class="font-unique-9">With</span> 
+                <span class="font-unique-10">Us</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl mb-6 font-unique-11">Visit the Gallery</h3>
+                    <p class="mb-4 font-unique-12">123 Monochrome Lane</p>
+                    <p class="mb-4 font-unique-13">Art District, City</p>
+                    <p class="font-unique-14">Open Tuesday-Sunday, 10am-6pm</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl mb-6 font-unique-15">Follow Us</h3>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors duration-300 text-2xl font-unique-16">Instagram</a>
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors duration-300 text-2xl font-unique-17">Twitter</a>
+                        <a href="#" class="text-white hover:text-gray-300 transition-colors duration-300 text-2xl font-unique-18">Facebook</a>
+                    </div>
+                    
+                    <h3 class="text-xl mt-8 mb-4 font-unique-19">Newsletter</h3>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 bg-transparent border border-white text-white flex-grow">
+                        <button type="submit" class="bg-white text-black px-4 py-2 font-unique-20">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="mb-4 font-unique-1">
+                <span class="font-unique-2">©</span> 
+                <span class="font-unique-3">2023</span> 
+                <span class="font-unique-4">MONOCHROME</span> 
+                <span class="font-unique-5">GALLERY.</span> 
+                <span class="font-unique-6">ALL</span> 
+                <span class="font-unique-7">RIGHTS</span> 
+                <span class="font-unique-8">RESERVED.</span>
+            </p>
+            <p class="font-unique-9">
+                <span class="font-unique-10">DESIGNED</span> 
+                <span class="font-unique-11">WITH</span> 
+                <span class="font-unique-12">PASSION</span> 
+                <span class="font-unique-13">IN</span> 
+                <span class="font-unique-14">BLACK</span> 
+                <span class="font-unique-15">AND</span> 
+                <span class="font-unique-16">WHITE.</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenu = document.getElementById('close-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+        });
+        
+        // Animate yarn paths on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const yarnPaths = document.querySelectorAll('.yarn-path');
+            
+            yarnPaths.forEach((path, index) => {
+                const offset = scrollPosition * 0.1 * (index + 1);
+                path.style.transform = `translateY(${offset}px)`;
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                mobileMenu.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>
